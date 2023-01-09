@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+  <head>
+    <title>My Experiment</title>
+    <style>
+      td {
+        width: 0.2px;
+        height: 0.2px;
+        border: 1px solid black;
+        
+      }
+      button {
+        width: 20px;
+        height: 20px;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    
+    <p>Click on a cell to change its color:</p>
+    <table>
+      <tbody id="grid">
+      </tbody>
+    </table>
+    <div id="color-buttons">
+      <button id="button-red" style="background-color: red" onclick="selectColor('red')"></button>
+      <button id="button-orange" style="background-color: orange" onclick="selectColor('orange')"></button>
+      <button id="button-yellow" style="background-color: yellow" onclick="selectColor('yellow')"></button>
+      <button id="button-green" style="background-color: green" onclick="selectColor('green')"></button>
+      <button id="button-blue" style="background-color: blue" onclick="selectColor('blue')"></button>
+      <button id="button-purple" style="background-color: purple" onclick="selectColor('purple')"></button>
+      <button id="button-back" style="background-color: black" onclick="selectColor('black')"></button>
+</div>
+<div id="cooldown-timer">
+      <span id="cooldown-minutes">01</span>:<span id="cooldown-seconds">00</span>
+    </div>
+
+<script>
+// Create a 5x5 grid of cells
+const grid = document.getElementById("grid");
+for (let i = 0; i < 650; i++) {
+  let row = document.createElement("tr");
+  for (let j = 0; j < 200; j++) {
+    let cell = document.createElement("td");
+    cell.id = "cell-" + (i * 5 +  j + 1);
+    cell.onclick = function() { changeColor(cell); };
+    row.appendChild(cell);
+  }
+  grid.appendChild(row);
+}
+
+let selectedColor = 'black';
+let isOnCooldown = false;
+let cooldownInterval = null;
+
+function selectColor(color) {
+  // Update the selected color
+  selectedColor = color;
+
+  // Update the appearance of the buttons
+  const buttons = document.getElementById("color-buttons").children;
+
+  
+}
+
+function changeColor(cell) {
+  // Check if the cooldown is in progress
+  if (isOnCooldown) {
+    return;
+  }
+
+  // Start the cooldown
+  isOnCooldown = true;
+  const minutesElement = document.getElementById("cooldown-minutes");
+  const secondsElement = document.getElementById("cooldown-seconds");
+  let minutes = 1;
+  let seconds = 0;
+  cooldownInterval = setInterval(function() {
+    seconds--;
+    if (seconds < 0) {
+      minutes--;
+      seconds = 59;
+    }
+    minutesElement.innerText = pad(minutes);
+    secondsElement.innerText = pad(seconds);
+    if (minutes === 0 && seconds === 0) {
+      clearInterval(cooldownInterval);
+      isOnCooldown = false;
+    }
+  }, 1000);
+
+  // Change the color of the cell
+  if (selectedColor !== null) {
+    cell.style.backgroundColor = selectedColor;
+  }
+}
+
+function pad(number) {
+  return number < 10 ? "0" + number : number;
+}
+    </script>
+  </body>
+</html>
